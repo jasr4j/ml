@@ -43,6 +43,14 @@ Using the MSE Loss Function, we can adjust θ<sub>0</sub> and θ<sub>1</sub>
 4. Update the parameter to reduce error
 5. Repeat until error is small as possible
 
+##### UPDATE FORMULA
+
+θ<sub>j</sub> := θ<sub>j</sub> − α (∂/∂θ<sub>j</sub>) J (θ<sub>0</sub>, θ<sub>1</sub>)
+
+The algorithm is supposed to stop when the gradient becomes 0. 
+
+Note: ∂ is the partial derivative symbol
+
 #### ACCURACY
 
 Mean Absolute Error (MAE): 

@@ -1,2 +1,6 @@
 *.out
 *.exe
+*.o
+ml
+linear
+.vscode/

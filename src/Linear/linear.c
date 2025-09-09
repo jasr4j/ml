@@ -1,35 +1,7 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
-
-double* parseX(bool x, long int maxpt) {
-        FILE *file; 
-        if (x) {
-                file = fopen("./data/x.txt", "r"); 
-        } else {
-                file = fopen("./data/y.txt", "r"); 
-        }
-        double *X = malloc(sizeof(double) * (size_t)maxpt); 
-        if (file == NULL) {
-                perror("Error opening file"); 
-                exit(1); 
-        }
-        long r = 0; 
-        double v;
-        while (r < maxpt && fscanf(file, " %lf", &v) == 1) {
-                X[(size_t)r] = v; 
-                r++; 
-        }
-        fclose(file);
-        for (long i = 0; i < r; i++) {
-                printf("%lf ", X[i]); 
-        }
-
-        printf("\n"); 
-        return X; 
-}
+#include "parser.h"
 
 double sum(double d[], size_t n) {
         double s = 0;
@@ -77,7 +49,7 @@ double* gradient_descent(double x[], double y[], size_t n, double learning_rate,
                 t1 -= learning_rate * g1; 
                 
                 if (epoch % 100 == 0 || epoch + 1 == epochs) {
-                        printf("Epoch=%d, mse=%.6f, theta0=%.6f, theta1=%.6f\n", epoch, loss(y, y_p, n), t0, t1); 
+                        printf("Epoch=%4d, mse=%.6f, theta0=%.6f, theta1=%.6f\n", epoch, loss(y, y_p, n), t0, t1); 
                 }
                 if (epoch + 1 == epochs) {
                         printf("Final Predicted Equation: f(x) = %.3f + %.3fx\n", t0, t1); 
@@ -87,23 +59,17 @@ double* gradient_descent(double x[], double y[], size_t n, double learning_rate,
 }
 
 int main() {
+        printf("\033c");
         int epochs; double learning_rate; 
-        long int maxpt; 
-        printf("EPOCHS: "); 
+        size_t n = getN(); 
+        printf("EPOCHS (Recommended - 100000): "); 
         scanf("%d", &epochs); 
-        printf("LEARNING RATE (ALPHA): "); 
+        printf("LEARNING RATE (ALPHA) (Recommended - 0.01): "); 
         scanf("%lf", &learning_rate); 
-        printf("MAX NUMBER OF DATA POINTS: "); 
-        scanf("%ld", &maxpt);
-        double *x = parseX(true, maxpt); 
-        double *y = parseX(false, maxpt); 
-        size_t n = sizeof(*y)/sizeof(double); 
+        double *x = parseX(1, n); 
+        double *y = parseX(0, n); 
         for (size_t i = 0; i < n; i++) {
                 printf("(x, y)%zu: (%lf, %lf)\n", i, x[i], y[i]); 
-        }
-        if (n != sizeof(x)/sizeof(double)) {
-                printf("Mismatched Data Size for x and y\n"); 
-                exit(1); 
         }
         double *y_p = gradient_descent(x, y, n, learning_rate, epochs); 
         printf("MAE = %f\n", mae(y, y_p, n));
