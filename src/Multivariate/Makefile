@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -O2 -Wall -Wextra
+CFLAGS = -std=c11 -O2 -Wall -Wextra
 
 all: mv
 

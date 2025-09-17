@@ -41,7 +41,7 @@ double* gradient_descent(double x[], double y[], size_t n, double learning_rate,
                 for (size_t i = 0; i < n; i++) errors[i] = y_p[i] - y[i]; 
                 double g0 = (2.0/n)*sum(errors, n); // gradient 0
                 double err_times_x_sum = 0;
-                for (int i = 0; i < n; i++) {
+                for (size_t i = 0; i < n; i++) {
                         err_times_x_sum += (errors[i] * x[i]); 
                 }
                 double g1 = (2.0/n)*err_times_x_sum; // gradient 1

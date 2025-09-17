@@ -3,4 +3,5 @@
 *.o
 ml
 linear
+mv
 .vscode/

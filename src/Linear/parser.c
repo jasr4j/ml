@@ -21,19 +21,17 @@ double* parseX(bool x, size_t maxpt) {
         while (r < maxpt && fscanf(file, " %lf", &v) == 1) {
                 tmp[r] = v; 
                 r++; 
-                double v; 
         }
         fclose(file);
         double *D = malloc(sizeof(double) * r); 
         if (D == NULL) {
                 perror("Not enough memory"); 
-                fclose(file); 
                 exit(1); 
         }
         for (size_t i = 0; i < r; i++) {
                 printf("%lf ", tmp[i]); 
         }
-        for (int i = 0; i < r; i++) D[i] = tmp[i]; 
+        for (size_t i = 0; i < r; i++) D[i] = tmp[i]; 
         printf("\n"); 
         return D; 
 }

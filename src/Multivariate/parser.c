@@ -4,24 +4,34 @@
 #include "parser.h"
 #include <string.h>
 
+size_t getN(); 
+size_t getDimensions(); 
+double** parseX(); 
+
 double** parseX() {
         size_t numLines = getN(); 
         size_t dimensions = getDimensions(); 
-        FILE *file = fopen("./data.csv", "r"); 
+        FILE *file = fopen("data.csv", "r"); 
         if (file == NULL) {
                 perror("Error opening file"); 
                 exit(1); 
         }
-        double **data = malloc(dimensions * numLines * sizeof(double));         
+        double **data = malloc(dimensions * sizeof(double*));   
+        for (size_t i = 0; i < dimensions; i++) {
+                data[i] = malloc(numLines * sizeof(double));
+        }  
         char line[256]; // 256 char buffer
         size_t r = 0; 
+        fgets(line, sizeof(line), file); 
         while (r < numLines && fgets(line, sizeof(line), file) != NULL) {
-                char* number = strtok(line, " "); 
-                for (size_t c = 0; c < dimensions; c++) {
-                        data[r][c] = atoi(number); 
-                        number = strtok(line, ","); 
+                char* token = strtok(line, ",\n");
+                size_t c = 0;
+                while (token != NULL && c < dimensions) {
+                        data[c][r] = strtod(token, NULL);
+                        token = strtok(NULL, ",\n"); 
+                        c++;
                 }
-                r++; 
+                r++;
         }
 
         fclose(file);
@@ -29,32 +39,48 @@ double** parseX() {
 }
 
 size_t getN() {
-        FILE *file; 
-        file = fopen("./data.csv", "r"); 
+        FILE *file = fopen("data.csv", "r"); 
         if (file == NULL) {
                 perror("Error opening file"); 
                 exit(1); 
         }
-        size_t r = 0; 
-        char c; 
-        while (fscanf(file, " %c", &c)) {
-                if (c == '\n') r++; 
+        char line[256]; // 256 char buffer
+        size_t r = -1; 
+        while (fgets(line, sizeof(line), file) != NULL) {
+                r++;
         }
+
         fclose(file);
         return r; 
 }
 
 size_t getDimensions() {
-        FILE *file = fopen("./data.csv", "r"); 
+        FILE *file = fopen("data.csv", "r"); 
         if (file == NULL) {
                 perror("Error opening file"); 
                 exit(1); 
         }
-        char c; 
-        size_t dimensions = 1; 
-        while (fscanf(file, " %c, ", &c) && c != '\n') {
-                if (c == ',') dimensions++; 
+        char line[256]; 
+        size_t d = 1; 
+        fgets(line, sizeof(line), file); 
+        for (size_t i = 0; i < strlen(line); i++) {
+                if (line[i] == ',') d++; 
         }
-        return dimensions; 
+        return d; 
 }
 
+
+// TEST FUNCTION
+/*int main() {
+        double **y = parseX(); 
+        for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 10; j++) {
+                        printf("%lf\n", (y[i])[j]); 
+                }
+        }
+        for (size_t i = 0; i < getDimensions(); i++) {
+                free(y[i]); 
+        }
+        free(y); 
+        return 0; 
+}*/
